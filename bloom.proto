@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+option go_package = "pb";
+
+package pb;
+
+service Bloom {
+    rpc CreateFilter(FilterRequest) returns (Response) {}
+    rpc ListFilters(ListRequest) returns (ListResponse) {}
+    rpc Info(ListRequest) returns (InfoResponse) {}
+    rpc Add(KeyRequest) returns (Response) {}
+    rpc Has(KeyRequest) returns (HasResponse) {}
+    rpc Clear(FilterRequest) returns (Response) {}
+    rpc Drop(FilterRequest) returns (Response) {}
+}
+
+enum Status {
+    SUCCESS = 0;
+    FAILURE = 1;
+}
+
+message FilterRequest {
+    string Name = 1;
+}
+
+message KeyRequest {
+    string Name = 1;
+    repeated string Keys = 2;
+}
+
+message ListRequest {}
+
+message Response {
+    Status Status = 1;
+}
+
+message HasResponse {
+    Status Status = 1;
+    repeated bool Has = 2;
+}
+
+message ListResponse {
+    repeated string Names = 1;
+}
+
+message InfoResponse {
+    repeated Filter Filters = 1;
+}
+
+message Filter {
+    string Name = 1;
+    int64 Capacity = 2;
+    int64 Hits = 3;
+    int64 Misses = 4;
+    int64 Checks = 5;
+    double Probability = 6;
+    int64 Keys = 7;
+}
