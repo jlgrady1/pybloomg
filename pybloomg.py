@@ -16,7 +16,11 @@ class BloomgClient(object):
     def _make_key_request(self, name, keys):
         req = KeyRequest()
         req.Name = name
+        if isinstance(keys, str):
+            keys = [keys]
         for key in keys:
+            if not isinstance(key, str):
+                raise Exception("Invalid key type {}, must be string", type(key))
             req.Keys.append(key)
         return req
 
@@ -33,10 +37,7 @@ class BloomgClient(object):
         return []
 
     def add(self, name, keys):
-        req = KeyRequest()
-        req.Name = name
-        for key in keys:
-            req.Keys.append(key)
+        req = self._make_key_request(name, keys)
         self.conn.Add(req)
 
     def info(self):
